@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>
+      function sendTransaction() {
+        ebakus
+          .getDefaultAddress()
+          .then(address => {
+            console.log('address: ', address)
+            return ebakus.sendTransaction({
+              from: address,
+              to: '0x2123717cd0ed9a42855fb658677f85e346181ac5',
+              value: '100000000000000', // 0.0001
+            })
+          })
+          .then(receipt => {
+            console.warn('receipt: ', receipt)
+            return ebakus.getBalance()
+          })
+          .then(balance => {
+            console.warn('balance', balance)
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1><%= htmlWebpackPlugin.options.title %></h1>
+
+    <button onClick="sendTransaction()">Send transaction</button>
+  </body>
+</html>

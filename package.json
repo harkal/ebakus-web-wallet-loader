@@ -1,0 +1,63 @@
+{
+  "name": "ebakus_wallet_loader",
+  "version": "1.0.0",
+  "description": "Ebakus Wallet Loader",
+  "homepage": "https://www.ebakus.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ththeod/ebakus_web_wallet.git"
+  },
+  "author": {
+    "name": "Chris Ziogas",
+    "email": "chris@ebakus.com"
+  },
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=development webpack-dev-server --mode development",
+    "build": "NODE_ENV=production webpack --config webpack.config.js --mode production",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "babel-loader": "^8.0.5",
+    "clean-webpack-plugin": "^1.0.0",
+    "eslint": "^5.12.0",
+    "eslint-config-prettier": "^3.5.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "terser-webpack-plugin": "^1.2.1",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14",
+    "webpack-merge": "^4.2.1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint",
+      "git add"
+    ],
+    "*.{js,json,md}": [
+      "prettier --list-different --write",
+      "git add"
+    ]
+  }
+}
