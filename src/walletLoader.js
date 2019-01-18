@@ -47,6 +47,9 @@ const renderFrame = () => {
   iframe.onload = () => {
     // send any message so as the wallet inits itself
     postMessage('init')
+
+    // dispatch event that we finished loading
+    window.dispatchEvent(new CustomEvent('ebakusLoaded'))
   }
 
   iframe.src = process.env.EBAKUS_WALLET_URL

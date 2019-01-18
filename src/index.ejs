@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= htmlWebpackPlugin.options.title %></title>
     <script>
+      // you can listen for `ebakusLoaded` event in order to know when wallet is ready
+      window.addEventListener(
+        'ebakusLoaded',
+        function(e) {
+          console.warn('Ebakus Loaded!!!')
+        },
+        false
+      )
+
       function sendTransaction() {
         ebakus
           .getDefaultAddress()

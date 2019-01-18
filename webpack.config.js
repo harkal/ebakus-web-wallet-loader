@@ -62,14 +62,9 @@ module.exports = {
     ebakus: './index.js',
   },
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'window',
-
-    // libraryExport: 'default',
-    // libraryTarget: 'umd',
-
-    // libraryTarget: 'var',
     library: 'ebakus',
   },
   devtool: 'inline-source-map',
