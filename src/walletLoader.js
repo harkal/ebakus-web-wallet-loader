@@ -137,6 +137,11 @@ const receiveMessage = ev => {
     _iframe.className = 'active'
   } else if (data.cmd === 'inactive') {
     _iframe.className = ''
+  } else if (data.cmd === 'openInNewTab' && typeof data.req === 'string') {
+    Object.assign(document.createElement('a'), {
+      target: '_blank',
+      href: data.req,
+    }).click()
   }
   console.groupEnd()
 }
