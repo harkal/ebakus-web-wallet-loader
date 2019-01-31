@@ -12,7 +12,7 @@ const getCssStyles = `
   right: 0;
   width: 80px;
   height: 80px;
-  z-index: 9999;
+  z-index: 2147483647;
 }
 
 #ebakus-wallet-frame.active {
@@ -46,7 +46,7 @@ const renderFrame = () => {
 
   iframe.onload = () => {
     // send any message so as the wallet inits itself
-    postMessage('init')
+    postPassiveMessage('init')
 
     // dispatch event that we finished loading
     window.dispatchEvent(new CustomEvent('ebakusLoaded'))
@@ -114,6 +114,25 @@ const postMessage = (cmd, data) => {
   return new Promise(handler)
 }
 
+const postPassiveMessage = (cmd, data) => {
+  const payload = {
+    cmd,
+    passive: true,
+    req: data,
+  }
+
+  console.groupCollapsed('Loader send passive message to wallet -', payload.cmd)
+  console.log('payload: ', payload)
+
+  try {
+    _iframeContentWindow.postMessage(JSON.stringify(payload), _targetOrigin)
+  } catch (err) {
+    console.error('postPassiveMessage err: ', err)
+  }
+
+  console.groupEnd()
+}
+
 const receiveMessage = ev => {
   // skip messages from current page
   if (ev.origin === window.location.origin) {
@@ -131,16 +150,18 @@ const receiveMessage = ev => {
 
   console.log('data: ', data)
 
-  if (data.id && responseCallbacks[data.id]) {
-    responseCallbacks[data.id](data)
-  } else if (data.cmd === 'active') {
+  const { id, cmd, req } = data
+
+  if (id && responseCallbacks[id]) {
+    responseCallbacks[id](data)
+  } else if (cmd === 'active') {
     _iframe.className = 'active'
-  } else if (data.cmd === 'inactive') {
+  } else if (cmd === 'inactive') {
     _iframe.className = ''
-  } else if (data.cmd === 'openInNewTab' && typeof data.req === 'string') {
+  } else if (cmd === 'openInNewTab' && typeof req === 'string') {
     Object.assign(document.createElement('a'), {
       target: '_blank',
-      href: data.req,
+      href: req,
     }).click()
   }
   console.groupEnd()
