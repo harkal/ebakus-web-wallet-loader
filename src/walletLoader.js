@@ -46,7 +46,7 @@ const renderFrame = () => {
 
   iframe.onload = () => {
     // send any message so as the wallet inits itself
-    postPassiveMessage('init')
+    postPassiveMessage('_')
 
     // dispatch event that we finished loading
     window.dispatchEvent(new CustomEvent('ebakusLoaded'))
@@ -181,4 +181,7 @@ const init = () => {
 }
 
 export default init
-export { postMessage as sendMessageToWallet }
+export {
+  postPassiveMessage as sendPassiveMessageToWallet,
+  postMessage as sendMessageToWallet,
+}
