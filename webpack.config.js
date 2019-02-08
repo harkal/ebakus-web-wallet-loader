@@ -79,7 +79,7 @@ module.exports = {
     }),
     new webpack.BannerPlugin({ banner }),
     new HtmlWebpackPlugin({
-      title: pkg.description,
+      title: 'Ebakus Wallet Loader Boilerplate',
       template: 'index.ejs',
     }),
   ],

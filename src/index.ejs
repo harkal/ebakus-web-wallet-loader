@@ -17,6 +17,7 @@
       (ev) => {
         console.warn('Ebakus Loaded!!!')
 
+        // loading custom token to wallet
         ebakus.init({
           tokens: [{
             contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
@@ -42,8 +43,6 @@
         },
       })
     )
-    // var web3 = new Web3()
-    // web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'))
 
     var abi = JSON.parse(
       '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
@@ -84,6 +83,7 @@
         ebakus.getDefaultAddress().then(address => {
           console.log('address: ', address);
           var output = compiler.compile(contractSolc, 1)
+
           console.log('output: ', output);
           for (var contractName in output.contracts) {
             status('deploying contract ' + contractName)
@@ -177,7 +177,8 @@
 
 <body>
   <h1>
-    <%= htmlWebpackPlugin.options.title %> Demo</h1>
+    <%= htmlWebpackPlugin.options.title %>
+  </h1>
 
   <p style="color: blue; font-weight: 600;">Status: <span id="status"></span></p>
 
