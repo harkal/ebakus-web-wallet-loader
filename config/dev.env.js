@@ -3,5 +3,5 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  EBAKUS_WALLET_URL: '"https://wallet.ebakus.test"',
+  EBAKUS_WALLET_URL: '"https://testpow.ebakus.com"',
 })
