@@ -16,10 +16,15 @@ const getCssStyles = `
 }
 
 #ebakus-wallet-frame.active {
+  right: 0;
+  width: 330px;
+  height: 100%;
+}
+
+#ebakus-wallet-frame.active.overlay {
   left: 0;
   right: auto;
   width: 100%;
-  height: 100%;
 }
 `
 
@@ -155,9 +160,13 @@ const receiveMessage = ev => {
   if (id && responseCallbacks[id]) {
     responseCallbacks[id](data)
   } else if (cmd === 'active') {
-    _iframe.className = 'active'
+    _iframe.className += ' active'
   } else if (cmd === 'inactive') {
     _iframe.className = ''
+  } else if (cmd === 'withOverlay') {
+    _iframe.className += ' overlay'
+  } else if (cmd === 'withoutOverlay') {
+    _iframe.className = _iframe.className.replace(/\boverlay\b/, '')
   } else if (cmd === 'openInNewTab' && typeof req === 'string') {
     Object.assign(document.createElement('a'), {
       target: '_blank',
