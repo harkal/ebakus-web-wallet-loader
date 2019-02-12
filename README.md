@@ -20,10 +20,10 @@ Have fun!
 In your dApp page you have to include our Wallet Loader script.
 
 ```js
-<script src="dist/wallet-loader.min.js" />
+<script src="./dist/wallet-loader.min.js" />
 ```
 
-The script will expose `window.ebakus`. You can also have a look at the [example page](dist/index.html).
+The script will expose `window.ebakus`. You can also have a look at the [example page](./dist/index.html).
 
 ## API
 
