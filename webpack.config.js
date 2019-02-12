@@ -59,13 +59,13 @@ if (IS_PRODUCTION) {
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    ebakus: './index.js',
+    'wallet-loader': './index.js',
   },
   output: {
-    filename: '[name].js',
+    filename: '[name].min.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'window',
-    library: 'ebakus',
+    library: 'ebakusWallet',
   },
   devtool: 'inline-source-map',
   devServer: {
