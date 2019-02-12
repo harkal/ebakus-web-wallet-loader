@@ -15,10 +15,10 @@
     window.addEventListener(
       'ebakusLoaded',
       (ev) => {
-        console.warn('Ebakus Loaded!!!')
+        console.warn('Ebakus Wallet loaded!!!')
 
         // loading custom token to wallet
-        ebakus.init({
+        ebakusWallet.init({
           tokens: [{
             contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
             symbol: 'SIM',
@@ -54,17 +54,17 @@
     function getWei() {
       status('getWei transaction sent, waiting for confirmation')
 
-      ebakus
+      ebakusWallet
         .getDefaultAddress()
         .then(address =>
-          ebakus.sendTransaction({
+        ebakusWallet.sendTransaction({
             to: faucetContractAddress,
             data: faucetContract.methods.getWei().encodeABI(),
           })
         )
         .then(receipt => {
           console.warn('Faucet receipt: ', receipt)
-          return ebakus.getBalance()
+          return ebakusWallet.getBalance()
         })
         .then(balance => {
           console.warn('Balance after getWei', balance)
@@ -80,7 +80,7 @@
       var contractSolc = document.getElementById('contract').value.trim()
 
       loadSolcVersion().then(compiler => {
-        ebakus.getDefaultAddress().then(address => {
+        ebakusWallet.getDefaultAddress().then(address => {
           console.log('address: ', address);
           var output = compiler.compile(contractSolc, 1)
 
@@ -99,7 +99,7 @@
               data: contractBytecode,
             })
 
-            ebakus
+            ebakusWallet
               .sendTransaction({
                 gas: 210000,
                 data: deployableCode.encodeABI(),
@@ -117,7 +117,7 @@
     }
 
     function sendTransaction() {
-      ebakus
+      ebakusWallet
         .getDefaultAddress()
         .then(address => {
           var toAddress = document.getElementById('address').value
@@ -126,7 +126,7 @@
           console.log('amount: ', amount)
           status('Transaction to address "' + toAddress + '" sent, waiting for confirmation')
 
-          return ebakus.sendTransaction({
+          return ebakusWallet.sendTransaction({
             from: address,
             to: toAddress,
             value: web3.utils.toWei(amount),
@@ -134,7 +134,7 @@
         })
         .then(receipt => {
           console.warn('receipt: ', receipt)
-          return ebakus.getBalance()
+          return ebakusWallet.getBalance()
         })
         .then(balance => {
           console.warn('balance', balance)
