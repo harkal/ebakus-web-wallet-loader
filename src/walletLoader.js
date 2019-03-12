@@ -5,13 +5,15 @@ let _iframeContentWindow
 /* eslint-enable */
 const responseCallbacks = {}
 
+const frameMinWidth = 150
+
 const getCssStyles = `
 #ebakus-wallet-frame {
   position: fixed;
   top: 0;
   right: 0;
-  width: 80px;
-  height: 80px;
+  min-width: ${frameMinWidth}px;
+  height: 44px;
   z-index: 2147483647;
 }
 
@@ -161,8 +163,17 @@ const receiveMessage = ev => {
     responseCallbacks[id](data)
   } else if (cmd === 'active') {
     _iframe.className += ' active'
+    _iframe.removeAttribute('style')
   } else if (cmd === 'inactive') {
     _iframe.className = ''
+    _iframe.removeAttribute('style')
+  } else if (cmd === 'resize') {
+    const width = parseInt(data.width, 10)
+    if (width > frameMinWidth) {
+      _iframe.setAttribute('style', `width: ${width}px`)
+    } else {
+      _iframe.removeAttribute('style')
+    }
   } else if (cmd === 'withOverlay') {
     _iframe.className += ' overlay'
   } else if (cmd === 'withoutOverlay') {
