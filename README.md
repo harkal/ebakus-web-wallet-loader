@@ -23,7 +23,7 @@ In your dApp page you have to include our Wallet Loader script.
 <script src="./dist/wallet-loader.min.js" />
 ```
 
-The script will expose `window.ebakus`. You can also have a look at the [example page](./dist/index.html).
+The script will expose `window.ebakusWallet`. You can also have a look at the [example page](./dist/index.html).
 
 ## API
 
@@ -45,7 +45,7 @@ window.addEventListener(
 
 ### Methods
 
-#### ebakus.init(options)
+#### ebakusWallet.init(options)
 
 The `init` method can be used in order to pass custom configuration for the actual wallet. At the moment, dApp is allowed to set custom tokens.
 
@@ -56,7 +56,7 @@ window.addEventListener(
     console.warn('Ebakus Wallet loaded')
 
     // loading custom token to wallet
-    ebakus.init({
+    ebakusWallet.init({
       tokens: [
         {
           contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
@@ -70,30 +70,30 @@ window.addEventListener(
 )
 ```
 
-#### ebakus.getDefaultAddress()
+#### ebakusWallet.getDefaultAddress()
 
 The `getDefaultAddress` method returns the wallet address.
 
 ```js
-ebakus.getDefaultAddress().then(address => {
+ebakusWallet.getDefaultAddress().then(address => {
   console.log('Your wallet address is:', address)
 })
 ```
 
-#### ebakus.getBalance()
+#### ebakusWallet.getBalance()
 
 The `getBalance` method returns the wallet balance.
 
 ```js
-ebakus.getBalance().then(balance => console.log)
+ebakusWallet.getBalance().then(balance => console.log)
 ```
 
-#### ebakus.sendTransaction(tx)
+#### ebakusWallet.sendTransaction(tx)
 
 The `sendTransaction` method will ask user to confirm, sign and send the transaction at the network through the wallet.
 
 ```js
-ebakus.sendTransaction(/* tx object */).then(receipt => console.log)
+ebakusWallet.sendTransaction(/* tx object */).then(receipt => console.log)
 ```
 
 ---
