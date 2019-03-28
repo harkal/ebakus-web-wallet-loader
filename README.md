@@ -15,22 +15,105 @@ Contact us at harry@ebakus.com and theo@ebakus.com
 
 Have fun!
 
+## Usage
+
+In your dApp page you have to include our Wallet Loader script.
+
+```js
+<script src="./dist/wallet-loader.min.js" />
+```
+
+The script will expose `window.ebakusWallet`. You can also have a look at the [example page](./dist/index.html).
+
+## API
+
+The dApp can communicate with the wallet through the loader API.
+
+### Events
+
+When loader has finished loading with the wallet loading it will dispatch the `ebakusLoaded` event.
+
+```js
+window.addEventListener(
+  'ebakusLoaded',
+  ev => {
+    console.warn('Ebakus Wallet loaded')
+  },
+  false
+)
+```
+
+### Methods
+
+#### ebakusWallet.init(options)
+
+The `init` method can be used in order to pass custom configuration for the actual wallet. At the moment, dApp is allowed to set custom tokens.
+
+```js
+window.addEventListener(
+  'ebakusLoaded',
+  ev => {
+    console.warn('Ebakus Wallet loaded')
+
+    // loading custom token to wallet
+    ebakusWallet.init({
+      tokens: [
+        {
+          contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
+          symbol: 'SIM',
+          decimals: 18,
+        },
+      ],
+    })
+  },
+  false
+)
+```
+
+#### ebakusWallet.getDefaultAddress()
+
+The `getDefaultAddress` method returns the wallet address.
+
+```js
+ebakusWallet.getDefaultAddress().then(address => {
+  console.log('Your wallet address is:', address)
+})
+```
+
+#### ebakusWallet.getBalance()
+
+The `getBalance` method returns the wallet balance.
+
+```js
+ebakusWallet.getBalance().then(balance => console.log)
+```
+
+#### ebakusWallet.sendTransaction(tx)
+
+The `sendTransaction` method will ask user to confirm, sign and send the transaction at the network through the wallet.
+
+```js
+ebakusWallet.sendTransaction(/* tx object */).then(receipt => console.log)
+```
+
 ---
 
-## Project setup
+## Development
 
-```
+### Install dependencies
+
+```bash
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Compile for development (with hot-reload support)
 
-```
+```bash
 yarn start
 ```
 
-### Compiles and minifies for production
+### Compile and minify for production
 
-```
+```bash
 yarn build
 ```
