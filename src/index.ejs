@@ -37,7 +37,7 @@
     )
 
     var web3 = new Web3(
-      new Web3.providers.WebsocketProvider('wss://nodepow.ebakus.com', {
+      new Web3.providers.WebsocketProvider('wss://node.ebakus.com', {
         headers: {
           origin: 'webwallet',
         },
@@ -48,7 +48,7 @@
       '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
     )
 
-    var faucetContractAddress = '0xd799e3f0f4b3d8429cb3c8c22b7866193ebbe1ca'
+    var faucetContractAddress = '0xe43aeaf605705af8b835efcaf318c7983dd39f85'
     var faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
 
     function getWei() {
