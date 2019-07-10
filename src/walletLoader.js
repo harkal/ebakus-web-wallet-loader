@@ -152,15 +152,15 @@ const receiveMessage = ev => {
     return
   }
 
-  const data = JSON.parse(ev.data)
-  console.groupCollapsed('Loader receive message from wallet -', data.cmd)
+  const payload = JSON.parse(ev.data)
+  console.groupCollapsed('Loader receive message from wallet -', payload.cmd)
 
-  console.log('data: ', data)
+  console.log('data: ', payload)
 
-  const { id, cmd, req } = data
+  const { id, cmd, req } = payload
 
   if (id && responseCallbacks[id]) {
-    responseCallbacks[id](data)
+    responseCallbacks[id](payload)
   } else if (cmd === 'active') {
     _iframe.className += ' active'
     _iframe.removeAttribute('style')
@@ -168,7 +168,7 @@ const receiveMessage = ev => {
     _iframe.className = ''
     _iframe.removeAttribute('style')
   } else if (cmd === 'resize') {
-    const width = parseInt(data.width, 10)
+    const width = parseInt(payload.width, 10)
     if (width > frameMinWidth) {
       _iframe.setAttribute('style', `width: ${width}px`)
     } else {
@@ -183,6 +183,11 @@ const receiveMessage = ev => {
       target: '_blank',
       href: req,
     }).click()
+  } else if (cmd === 'event') {
+    const { type, data } = payload
+    if (typeof type === 'string') {
+      window.dispatchEvent(new CustomEvent(type, { detail: data }))
+    }
   }
   console.groupEnd()
 }
