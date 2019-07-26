@@ -1,12 +1,14 @@
 import walletLoader, {
   sendPassiveMessageToWallet,
   sendMessageToWallet,
+  isConnected as isWalletConnected,
 } from './walletLoader'
 
 // load wallet
 walletLoader()
 
 export const init = data => sendPassiveMessageToWallet('init', data)
+export const isConnected = () => isWalletConnected()
 export const unlockWallet = data =>
   sendPassiveMessageToWallet('unlockWallet', data)
 

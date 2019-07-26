@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+let _isConnected = false
 let _targetOrigin
 let _iframe
 let _iframeContentWindow
@@ -57,6 +58,8 @@ const renderFrame = () => {
 
     // dispatch event that we finished loading
     window.dispatchEvent(new CustomEvent('ebakusLoaded'))
+
+    _isConnected = true
   }
 
   iframe.src = process.env.EBAKUS_WALLET_URL
@@ -205,8 +208,11 @@ const init = () => {
   window.addEventListener('message', receiveMessage, false)
 }
 
+const isConnected = () => _isConnected
+
 export default init
 export {
+  isConnected,
   postPassiveMessage as sendPassiveMessageToWallet,
   postMessage as sendMessageToWallet,
 }
