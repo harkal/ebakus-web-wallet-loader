@@ -7,6 +7,7 @@ let _iframeContentWindow
 const responseCallbacks = {}
 
 const frameMinWidth = 150
+const frameMinHeight = 46
 
 const getCssStyles = `
 #ebakus-wallet-frame {
@@ -14,7 +15,7 @@ const getCssStyles = `
   top: 0;
   right: 0;
   min-width: ${frameMinWidth}px;
-  height: 44px;
+  height: ${frameMinHeight}px;
   z-index: 2147483647;
 }
 
@@ -171,9 +172,19 @@ const receiveMessage = ev => {
     _iframe.className = ''
     _iframe.removeAttribute('style')
   } else if (cmd === 'resize') {
+    let styles = ''
     const width = parseInt(payload.width, 10)
+    const height = parseInt(payload.height, 10)
+
+    if (height > frameMinHeight) {
+      styles += `height: ${height}px;`
+    }
     if (width > frameMinWidth) {
-      _iframe.setAttribute('style', `width: ${width}px`)
+      styles += `width: ${width}px;`
+    }
+
+    if (styles != '') {
+      _iframe.setAttribute('style', styles)
     } else {
       _iframe.removeAttribute('style')
     }
