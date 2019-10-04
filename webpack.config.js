@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
@@ -25,11 +25,13 @@ const banner = `${pkg.description} v${pkg.version}
 
 const optimization = {}
 if (IS_PRODUCTION) {
+  optimization.minimize = true
   optimization.minimizer = [
     new TerserPlugin({
       cache: true,
       parallel: true,
-      sourceMap: !IS_PRODUCTION, // set to true if you want JS source maps
+      sourceMap: false,
+      extractComments: false,
       terserOptions: {
         compress: {
           global_defs: {
@@ -73,7 +75,7 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'dist'),
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': env,
     }),
