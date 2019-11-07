@@ -7,7 +7,7 @@ let _iframeContentWindow
 const responseCallbacks = {}
 
 const frameMinWidth = 150
-const frameMinHeight = 46
+const frameMinHeight = 60
 
 const getCssStyles = `
 #ebakus-wallet-frame {
@@ -20,15 +20,15 @@ const getCssStyles = `
 }
 
 #ebakus-wallet-frame.active {
-  right: 0;
-  width: 330px;
-  height: 100%;
+  right: 0 !important;
+  width: 340px !important;
+  height: 100% !important;
 }
 
 #ebakus-wallet-frame.active.overlay {
-  left: 0;
-  right: auto;
-  width: 100%;
+  left: 0 !important;
+  right: auto !important;
+  width: 100% !important;
 }
 `
 
@@ -72,13 +72,16 @@ const renderFrame = () => {
 
   try {
     document.body.appendChild(iframe)
+    _iframeContentWindow = iframe.contentWindow
   } catch (e) {
-    window.addEventListener('DOMContentLoaded', () =>
-      (document.body || document.documentElement).appendChild(iframe)
-    )
+    window.addEventListener('DOMContentLoaded', () => {
+      ;(document.body || document.documentElement).appendChild(iframe)
+
+      _iframeContentWindow = iframe.contentWindow
+    })
   }
 
-  return iframe
+  _iframe = iframe
 }
 
 const postMessage = (cmd, data) => {
@@ -116,7 +119,7 @@ const postMessage = (cmd, data) => {
     } catch (err) {
       console.error('postMessage err: ', err)
 
-      delete responseCallbacks[response.id]
+      delete responseCallbacks[payload.id]
     }
 
     console.groupEnd()
@@ -169,7 +172,7 @@ const receiveMessage = ev => {
     _iframe.className += ' active'
     _iframe.removeAttribute('style')
   } else if (cmd === 'inactive') {
-    _iframe.className = ''
+    _iframe.className = _iframe.className.replace(/\bactive\b/, '')
     _iframe.removeAttribute('style')
   } else if (cmd === 'resize') {
     let styles = ''
@@ -214,8 +217,7 @@ const init = () => {
   document.getElementsByTagName('head')[0].appendChild(style)
 
   // create iFrame to wallet
-  _iframe = renderFrame()
-  _iframeContentWindow = _iframe.contentWindow
+  renderFrame()
   window.addEventListener('message', receiveMessage, false)
 }
 
