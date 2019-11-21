@@ -21,7 +21,7 @@ const getCssStyles = `
 
 #ebakus-wallet-frame.active {
   right: 0 !important;
-  width: 340px !important;
+  width: 340px;
   height: 100% !important;
 }
 
@@ -63,12 +63,12 @@ const renderFrame = () => {
     _isConnected = true
   }
 
-  iframe.src = process.env.EBAKUS_WALLET_URL
-
   // extract wallet origin so as we can verify iframe postMessage origin
   const tempLink = document.createElement('a')
   tempLink.setAttribute('href', process.env.EBAKUS_WALLET_URL)
   _targetOrigin = tempLink.origin
+
+  iframe.src = _targetOrigin
 
   try {
     document.body.appendChild(iframe)
@@ -168,12 +168,12 @@ const receiveMessage = ev => {
 
   if (id && responseCallbacks[id]) {
     responseCallbacks[id](payload)
-  } else if (cmd === 'active') {
+  } else if (cmd === 'active' && _iframe.className.indexOf('active') === -1) {
     _iframe.className += ' active'
     _iframe.removeAttribute('style')
   } else if (cmd === 'inactive') {
-    _iframe.className = _iframe.className.replace(/\bactive\b/, '')
-    _iframe.removeAttribute('style')
+    _iframe.className = _iframe.className.replace(/\bactive\b/g, '')
+    // _iframe.removeAttribute('style')
   } else if (cmd === 'resize') {
     let styles = ''
     const width = parseInt(payload.width, 10)
@@ -191,15 +191,22 @@ const receiveMessage = ev => {
     } else {
       _iframe.removeAttribute('style')
     }
-  } else if (cmd === 'withOverlay') {
+  } else if (
+    cmd === 'withOverlay' &&
+    _iframe.className.indexOf('overlay') === -1
+  ) {
     _iframe.className += ' overlay'
   } else if (cmd === 'withoutOverlay') {
-    _iframe.className = _iframe.className.replace(/\boverlay\b/, '')
+    _iframe.className = _iframe.className.replace(/\boverlay\b/g, '')
   } else if (cmd === 'openInNewTab' && typeof req === 'string') {
+    let clickEvent = new MouseEvent('click', {
+      view: window,
+    })
+
     Object.assign(document.createElement('a'), {
       target: '_blank',
       href: req,
-    }).click()
+    }).dispatchEvent(clickEvent)
   } else if (cmd === 'event') {
     const { type, data } = payload
     if (typeof type === 'string') {
