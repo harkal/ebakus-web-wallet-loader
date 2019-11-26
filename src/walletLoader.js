@@ -6,6 +6,8 @@ let _iframeContentWindow
 /* eslint-enable */
 const responseCallbacks = {}
 
+const LOCAL_STORAGE_PREFIX = '_com.ebakus.wallet'
+
 const frameMinWidth = 150
 const frameMinHeight = 60
 
@@ -207,6 +209,37 @@ const receiveMessage = ev => {
       target: '_blank',
       href: req,
     }).dispatchEvent(clickEvent)
+  } else if (cmd === 'localStorageSet') {
+    const { key, data } = req
+    if (key && data) {
+      localStorage.setItem(
+        `${LOCAL_STORAGE_PREFIX}:${key}`,
+        typeof data === 'string' ? data : JSON.stringify(data)
+      )
+    }
+  } else if (cmd === 'localStorageGet') {
+    const { key } = req
+    if (key) {
+      const data = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
+      try {
+        _iframeContentWindow.postMessage(
+          JSON.stringify({
+            id,
+            cmd,
+            req,
+            res: data,
+          }),
+          _targetOrigin
+        )
+      } catch (err) {
+        console.error('postPassiveMessage err: ', err)
+      }
+    }
+  } else if (cmd === 'localStorageRemove') {
+    const { key } = req
+    if (key) {
+      localStorage.removeItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
+    }
   } else if (cmd === 'event') {
     const { type, data } = payload
     if (typeof type === 'string') {
