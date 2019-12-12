@@ -66,8 +66,14 @@ module.exports = {
   output: {
     filename: '[name].min.js',
     path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'window',
-    library: 'ebakusWallet',
+    libraryTarget: 'umd',
+    libraryExport: 'default',
+    library: {
+      root: 'ebakusWallet',
+      amd: pkg.name,
+      commonjs: pkg.name,
+    },
+    globalObject: 'this',
   },
   devtool: 'inline-source-map',
   devServer: {

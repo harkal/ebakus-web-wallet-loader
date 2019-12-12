@@ -12,6 +12,9 @@
     "email": "chris@ebakus.com"
   },
   "license": "MIT",
+  "main": "src/index.js",
+  "browser": "dist/wallet-loader.min.js",
+  "source": "src/index.js",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --mode development",
     "build": "NODE_ENV=production webpack --config webpack.config.js --mode production",

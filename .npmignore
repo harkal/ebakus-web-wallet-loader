@@ -1,0 +1,10 @@
+config
+src/index.ejs
+babel.config.js
+webpack.config.js
+.babelrc
+.eslintrc
+.editorconfig
+.gitignore
+.prettierrc
+.prettierignore

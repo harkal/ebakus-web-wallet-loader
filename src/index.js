@@ -7,16 +7,24 @@ import walletLoader, {
 // load wallet
 walletLoader()
 
-export const init = data => sendPassiveMessageToWallet('init', data)
-export const isWalletFrameLoaded = () => isWalletConnected()
-export const unlockWallet = data =>
-  sendPassiveMessageToWallet('unlockWallet', data)
+const init = data => sendPassiveMessageToWallet('init', data)
+const isWalletFrameLoaded = () => isWalletConnected()
+const unlockWallet = data => sendPassiveMessageToWallet('unlockWallet', data)
 
-export const getCurrentProviderEndpoint = () =>
+const getCurrentProviderEndpoint = () =>
   sendMessageToWallet('currentProviderEndpoint')
-export const getDefaultAddress = () => sendMessageToWallet('defaultAddress')
+const getDefaultAddress = () => sendMessageToWallet('defaultAddress')
 
-export const getBalance = () => sendMessageToWallet('getBalance')
+const getBalance = () => sendMessageToWallet('getBalance')
 
-export const sendTransaction = data =>
-  sendMessageToWallet('sendTransaction', data)
+const sendTransaction = data => sendMessageToWallet('sendTransaction', data)
+
+export default {
+  init,
+  isWalletFrameLoaded,
+  unlockWallet,
+  getCurrentProviderEndpoint,
+  getDefaultAddress,
+  getBalance,
+  sendTransaction,
+}

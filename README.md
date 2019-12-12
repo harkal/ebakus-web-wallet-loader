@@ -17,11 +17,27 @@ Contact us at harry@ebakus.com and theo@ebakus.com
 
 Have fun!
 
-## Usage
+## Load package
+
+### Using npm
+
+```bash
+npm install --save ebakus-web-wallet-loader
+```
+
+and use it like:
+
+```js
+import ebakusWallet from 'ebakus-web-wallet-loader'
+
+ebakusWallet.sendTransaction(...)
+```
+
+### With a script tag from your site
 
 In your dApp page you have to include our Wallet Loader script.
 
-```js
+```html
 <script src="./dist/wallet-loader.min.js" />
 ```
 
