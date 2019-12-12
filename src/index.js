@@ -8,7 +8,7 @@ import walletLoader, {
 walletLoader()
 
 export const init = data => sendPassiveMessageToWallet('init', data)
-export const isConnected = () => isWalletConnected()
+export const isWalletFrameLoaded = () => isWalletConnected()
 export const unlockWallet = data =>
   sendPassiveMessageToWallet('unlockWallet', data)
 
