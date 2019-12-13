@@ -37,6 +37,14 @@ ebakusWallet.sendTransaction(...)
 
 In your dApp page you have to include our Wallet Loader script.
 
+Load it from CDN:
+
+```html
+<script src="https://unpkg.com/ebakus-web-wallet-loader" />
+```
+
+or copy it to your site:
+
 ```html
 <script src="./dist/wallet-loader.min.js" />
 ```
@@ -205,17 +213,17 @@ ebakusWallet.sendTransaction(/* tx object */).then(receipt => console.log)
 ### Install dependencies
 
 ```bash
-yarn install
+npm install
 ```
 
 ### Compile for development (with hot-reload support)
 
 ```bash
-yarn start
+npm start
 ```
 
 ### Compile and minify for production
 
 ```bash
-yarn build
+npm run build
 ```

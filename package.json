@@ -1,26 +1,34 @@
 {
   "name": "ebakus-web-wallet-loader",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "The Ebakus wallet loader library creates an iframe and loads the web wallet library in there. It can accept custom configurations for the wallet (i.e. load custom tokens) and act as an interface between the dApp and the web wallet iframe. This way a user can use his wallet to interface with any ebakus dApp she wants without having to create new keys and manage multiple accounts.",
   "homepage": "https://www.ebakus.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ththeod/ebakus_web_wallet.git"
+    "url": "git+https://github.com/ebakus/ebakus-web-wallet-loader.git"
   },
-  "author": {
-    "name": "Chris Ziogas",
-    "email": "chris@ebakus.com"
-  },
+  "author": "Ebakus AG <hello@ebakus.com>",
   "license": "MIT",
   "main": "src/index.js",
-  "browser": "dist/wallet-loader.min.js",
   "source": "src/index.js",
+  "browser": "dist/wallet-loader.min.js",
+  "unpkg": "dist/wallet-loader.min.js",
+  "keywords": [
+    "blockchain",
+    "ebakus",
+    "wallet",
+    "web3"
+  ],
+  "bugs": {
+    "url": "https://github.com/ebakus/ebakus-web-wallet-loader/issues"
+  },
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --mode development",
     "build": "NODE_ENV=production webpack --config webpack.config.js --mode production",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "version": "npm run build && git add -A dist"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",

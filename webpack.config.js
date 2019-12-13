@@ -17,7 +17,7 @@ const env = IS_PRODUCTION
 
 const banner = `${pkg.description} v${pkg.version}
 
-@author ${pkg.author.name} <${pkg.author.email}>
+@author ${pkg.author}
 @website ${pkg.homepage}
 
 @copyright Ebakus ${now.getFullYear()}
