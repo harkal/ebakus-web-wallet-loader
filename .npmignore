@@ -4,7 +4,9 @@ babel.config.js
 webpack.config.js
 .babelrc
 .eslintrc
+.eslintignore
 .editorconfig
 .gitignore
 .prettierrc
 .prettierignore
+.vscode/*
