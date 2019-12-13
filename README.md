@@ -2,7 +2,7 @@
 
 The wallet library creates an iframe and loads the web wallet library in there. It can accept custom configurations for the wallet (i.e. load custom tokens) and act as an interface between the dApp and the web wallet iframe. This way a user can use his wallet to interface with any ebakus dApp she wants without having to create new keys and manage multiple accounts.
 
-You check how it looks like inside a dApp at [an existing dApp](https://demo.ebakus.com).
+You can check how it looks like inside [an existing dApp](https://demo.ebakus.com).
 
 ## The boilerplate
 
@@ -13,7 +13,7 @@ The best way to start is to use the dApp Boilerplate, where you can see how you 
 - Interact with smart contracts
 - Configure custom tokens
 
-Contact us at harry@ebakus.com and theo@ebakus.com
+Contact us at hello@ebakus.com.
 
 Have fun!
 
