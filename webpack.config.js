@@ -89,6 +89,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Ebakus Wallet Loader Boilerplate',
       template: 'index.ejs',
+      inject: false,
     }),
   ],
   optimization,

@@ -7,49 +7,51 @@
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+  <% } %>
+
   <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.37/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk="
     crossorigin="anonymous"></script>
   <script src="https://s3.amazonaws.com/browser-solc.dappbench.com/browser-solc.min.js" type="text/javascript"></script>
   <script>
+    var web3, faucetContract
+
+    var faucetContractAddress = '0xb487e290dd71773b39f7250efe1496677c1400da'
+    var abi = JSON.parse(
+      '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
+    )
+
     // you can listen for `ebakusLoaded` event in order to know when wallet is ready
     window.addEventListener(
       'ebakusLoaded',
       (ev) => {
         console.warn('Ebakus Wallet loaded!!!')
 
-        // loading custom token to wallet
-        ebakusWallet.init({
-          tokens: [{
-            contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
-            symbol: 'SIM',
-            decimals: 18,
-          }]
+        self.ebakusWallet.getCurrentProviderEndpoint().then(function(endpoint){
+          web3 = new Web3( new Web3.providers.WebsocketProvider(endpoint) )
+          faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
         })
 
         // document.getElementById('versions').onchange = loadSolcVersion;
         BrowserSolc.getVersions(function (soljsonSources, soljsonReleases) {
-          populateSolcVersions(soljsonSources);
+          populateSolcVersions(soljsonSources)
 
-          document.getElementById('versions').value = soljsonReleases['0.4.18'];
+          document.getElementById('versions').value = soljsonReleases['0.4.18']
         });
       },
       false
     )
 
-    var web3 = new Web3(
-      new Web3.providers.WebsocketProvider('wss://node.ebakus.com', {
-        headers: {
-          origin: 'webwallet',
-        },
-      })
-    )
-
-    var abi = JSON.parse(
-      '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
-    )
-
-    var faucetContractAddress = '0xb487e290dd71773b39f7250efe1496677c1400da'
-    var faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
+    // loading wallet with custom token
+    ebakusWallet.init({
+      // walletEndpoint:'https://wallet.ebakus.test',
+      tokens: [{
+        contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
+        symbol: 'SIM',
+        decimals: 18,
+      }]
+    })
 
     function getWei() {
       status('getWei transaction sent, waiting for confirmation')

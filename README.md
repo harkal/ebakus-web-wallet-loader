@@ -30,7 +30,7 @@ and use it like:
 ```js
 import ebakusWallet from 'ebakus-web-wallet-loader'
 
-ebakusWallet.sendTransaction(...)
+ebakusWallet.init() // you have to load the wallet once
 ```
 
 ### With a script tag from your site
@@ -50,6 +50,12 @@ or copy it to your site:
 ```
 
 The script will expose `window.ebakusWallet`. You can also have a look at the [example page](./dist/index.html).
+
+You will have to init the loader once using:
+
+```js
+ebakusWallet.init()
+```
 
 ## API
 
@@ -119,28 +125,47 @@ window.addEventListener(
 )
 ```
 
+### ebakusStaked
+
+On wallet staked amount change it will dispatch the `ebakusStaked` event.
+
+```js
+window.addEventListener(
+  'ebakusStaked',
+  ({ detail: staked }) => {
+    console.warn('The new user staked amount is', web3.utils.toWei(staked))
+  },
+  false
+)
+```
+
 ### Methods
 
 #### ebakusWallet.init(options)
 
-The `init` method can be used in order to pass custom configuration for the actual wallet. At the moment, dApp is allowed to set custom tokens.
+The `init` method can be used in order to pass custom configuration for the actual wallet.
+You can:
+
+- point the walletLoader to your own instance of the Ebakus Wallet
+- set custom tokens for your dApp
 
 ```js
+// loading custom token to wallet
+ebakusWallet.init({
+  // walletEndpoint: 'https://wallet.ebakus.test'  // this is the default and can be ommitted
+  tokens: [
+    {
+      contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
+      symbol: 'SIM',
+      decimals: 18,
+    },
+  ],
+})
+
 window.addEventListener(
   'ebakusLoaded',
   ev => {
     console.warn('Ebakus Wallet loaded')
-
-    // loading custom token to wallet
-    ebakusWallet.init({
-      tokens: [
-        {
-          contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
-          symbol: 'SIM',
-          decimals: 18,
-        },
-      ],
-    })
   },
   false
 )
@@ -196,6 +221,14 @@ The `getBalance` method returns the wallet balance.
 
 ```js
 ebakusWallet.getBalance().then(balance => console.log)
+```
+
+#### ebakusWallet.getStaked()
+
+The `getStaked` method returns the wallet staked amount.
+
+```js
+ebakusWallet.getStaked().then(staked => console.log)
 ```
 
 #### ebakusWallet.sendTransaction(tx)
