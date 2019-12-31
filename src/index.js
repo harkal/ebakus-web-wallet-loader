@@ -4,10 +4,18 @@ import walletLoader, {
   isConnected as isWalletConnected,
 } from './walletLoader'
 
-// load wallet
-walletLoader()
+const init = options => {
+  const { walletEndpoint, tokens } = options || {}
+  if (tokens) {
+    window.addEventListener('ebakusLoaded', () => {
+      sendPassiveMessageToWallet('init', { tokens })
+    })
+  }
 
-const init = data => sendPassiveMessageToWallet('init', data)
+  // load wallet
+  walletLoader(walletEndpoint)
+}
+
 const isWalletFrameLoaded = () => isWalletConnected()
 const unlockWallet = data => sendPassiveMessageToWallet('unlockWallet', data)
 
@@ -16,6 +24,7 @@ const getCurrentProviderEndpoint = () =>
 const getDefaultAddress = () => sendMessageToWallet('defaultAddress')
 
 const getBalance = () => sendMessageToWallet('getBalance')
+const getStaked = () => sendMessageToWallet('getStaked')
 
 const sendTransaction = data => sendMessageToWallet('sendTransaction', data)
 
@@ -26,5 +35,6 @@ export default {
   getCurrentProviderEndpoint,
   getDefaultAddress,
   getBalance,
+  getStaked,
   sendTransaction,
 }

@@ -6,6 +6,7 @@ let _iframeContentWindow
 /* eslint-enable */
 const responseCallbacks = {}
 
+const IFRAME_ID = 'ebakus-wallet-frame'
 const LOCAL_STORAGE_PREFIX = '_com.ebakus.wallet'
 
 const frameMinWidth = 150
@@ -49,9 +50,9 @@ const getUniqueJobId = () => {
   return id
 }
 
-const renderFrame = () => {
+const renderFrame = walletUrl => {
   const iframe = document.createElement('iframe')
-  iframe.id = 'ebakus-wallet-frame'
+  iframe.id = IFRAME_ID
   iframe.setAttribute('frameBorder', '0')
   iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin')
 
@@ -67,7 +68,7 @@ const renderFrame = () => {
 
   // extract wallet origin so as we can verify iframe postMessage origin
   const tempLink = document.createElement('a')
-  tempLink.setAttribute('href', process.env.EBAKUS_WALLET_URL)
+  tempLink.setAttribute('href', walletUrl)
   _targetOrigin = tempLink.origin
 
   iframe.src = _targetOrigin
@@ -256,7 +257,13 @@ const receiveMessage = ev => {
   console.groupEnd()
 }
 
-const init = () => {
+const init = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
+  // if iFrame exists already then skip
+  const existingIFrame = document.getElementById(IFRAME_ID)
+  if (existingIFrame) {
+    return
+  }
+
   // load CSS style
   const style = document.createElement('style')
   style.className = 'ebakus-styles'
@@ -264,7 +271,7 @@ const init = () => {
   document.getElementsByTagName('head')[0].appendChild(style)
 
   // create iFrame to wallet
-  renderFrame()
+  renderFrame(walletUrl)
   window.addEventListener('message', receiveMessage, false)
 }
 
