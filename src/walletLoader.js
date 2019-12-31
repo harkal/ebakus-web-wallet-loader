@@ -201,14 +201,21 @@ const receiveMessage = ev => {
   } else if (cmd === 'withoutOverlay') {
     _iframe.className = _iframe.className.replace(/\boverlay\b/g, '')
   } else if (cmd === 'openInNewTab' && typeof req === 'string') {
-    let clickEvent = new MouseEvent('click', {
+    const link = Object.assign(document.createElement('a'), {
+      target: '_blank',
+      href: req,
+    })
+
+    if (link.origin === window.location.origin) {
+      window.location.href = req
+      return
+    }
+
+    const clickEvent = new MouseEvent('click', {
       view: window,
     })
 
-    Object.assign(document.createElement('a'), {
-      target: '_blank',
-      href: req,
-    }).dispatchEvent(clickEvent)
+    link.dispatchEvent(clickEvent)
   } else if (cmd === 'localStorageSet') {
     const { key, data } = req
     if (key && data) {
