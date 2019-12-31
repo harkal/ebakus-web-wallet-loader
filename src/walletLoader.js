@@ -106,7 +106,7 @@ const postMessage = (cmd, data) => {
       }
 
       const { res, err } = response
-      if (res) {
+      if (typeof res !== 'undefined' && res !== null) {
         resolve(res)
         return
       }
