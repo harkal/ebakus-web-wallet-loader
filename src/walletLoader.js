@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 let _isConnected = false
+let _isMainInstance = true
 let _targetOrigin
 let _iframe
 let _iframeContentWindow
@@ -50,6 +51,13 @@ const getUniqueJobId = () => {
   return id
 }
 
+// extract origin from url
+const getOrigin = url => {
+  const tempLink = document.createElement('a')
+  tempLink.setAttribute('href', url)
+  return tempLink.origin
+}
+
 const renderFrame = walletUrl => {
   const iframe = document.createElement('iframe')
   iframe.id = IFRAME_ID
@@ -60,16 +68,14 @@ const renderFrame = walletUrl => {
     // send any message so as the wallet inits itself
     postPassiveMessage('_')
 
+    _isConnected = true
+
     // dispatch event that we finished loading
     window.dispatchEvent(new CustomEvent('ebakusLoaded'))
-
-    _isConnected = true
   }
 
   // extract wallet origin so as we can verify iframe postMessage origin
-  const tempLink = document.createElement('a')
-  tempLink.setAttribute('href', walletUrl)
-  _targetOrigin = tempLink.origin
+  _targetOrigin = getOrigin(walletUrl)
 
   iframe.src = _targetOrigin
 
@@ -171,98 +177,136 @@ const receiveMessage = ev => {
 
   if (id && responseCallbacks[id]) {
     responseCallbacks[id](payload)
-  } else if (cmd === 'active' && _iframe.className.indexOf('active') === -1) {
-    _iframe.className += ' active'
-    _iframe.removeAttribute('style')
-  } else if (cmd === 'inactive') {
-    _iframe.className = _iframe.className.replace(/\bactive\b/g, '')
-    // _iframe.removeAttribute('style')
-  } else if (cmd === 'resize') {
-    let styles = ''
-    const width = parseInt(payload.width, 10)
-    const height = parseInt(payload.height, 10)
-
-    if (height > frameMinHeight) {
-      styles += `height: ${height}px;`
-    }
-    if (width > frameMinWidth) {
-      styles += `width: ${width}px;`
-    }
-
-    if (styles != '') {
-      _iframe.setAttribute('style', styles)
-    } else {
+  } else if (_isMainInstance) {
+    if (cmd === 'active' && _iframe.className.indexOf('active') === -1) {
+      _iframe.className += ' active'
       _iframe.removeAttribute('style')
-    }
-  } else if (
-    cmd === 'withOverlay' &&
-    _iframe.className.indexOf('overlay') === -1
-  ) {
-    _iframe.className += ' overlay'
-  } else if (cmd === 'withoutOverlay') {
-    _iframe.className = _iframe.className.replace(/\boverlay\b/g, '')
-  } else if (cmd === 'openInNewTab' && typeof req === 'string') {
-    const link = Object.assign(document.createElement('a'), {
-      target: '_blank',
-      href: req,
-    })
+    } else if (cmd === 'inactive') {
+      _iframe.className = _iframe.className.replace(/\bactive\b/g, '')
+      // _iframe.removeAttribute('style')
+    } else if (cmd === 'resize') {
+      let styles = ''
+      const width = parseInt(payload.width, 10)
+      const height = parseInt(payload.height, 10)
 
-    if (link.origin === window.location.origin) {
-      window.location.href = req
-      return
-    }
-
-    const clickEvent = new MouseEvent('click', {
-      view: window,
-    })
-
-    link.dispatchEvent(clickEvent)
-  } else if (cmd === 'localStorageSet') {
-    const { key, data } = req
-    if (key && data) {
-      localStorage.setItem(
-        `${LOCAL_STORAGE_PREFIX}:${key}`,
-        typeof data === 'string' ? data : JSON.stringify(data)
-      )
-    }
-  } else if (cmd === 'localStorageGet') {
-    const { key } = req
-    if (key) {
-      const data = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
-      try {
-        _iframeContentWindow.postMessage(
-          JSON.stringify({
-            id,
-            cmd,
-            req,
-            res: data,
-          }),
-          _targetOrigin
-        )
-      } catch (err) {
-        console.error('postPassiveMessage err: ', err)
+      if (height > frameMinHeight) {
+        styles += `height: ${height}px;`
       }
-    }
-  } else if (cmd === 'localStorageRemove') {
-    const { key } = req
-    if (key) {
-      localStorage.removeItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
-    }
-  } else if (cmd === 'event') {
-    const { type, data } = payload
-    if (typeof type === 'string') {
-      window.dispatchEvent(new CustomEvent(type, { detail: data }))
+      if (width > frameMinWidth) {
+        styles += `width: ${width}px;`
+      }
+
+      if (styles != '') {
+        _iframe.setAttribute('style', styles)
+      } else {
+        _iframe.removeAttribute('style')
+      }
+    } else if (
+      cmd === 'withOverlay' &&
+      _iframe.className.indexOf('overlay') === -1
+    ) {
+      _iframe.className += ' overlay'
+    } else if (cmd === 'withoutOverlay') {
+      _iframe.className = _iframe.className.replace(/\boverlay\b/g, '')
+    } else if (cmd === 'openInNewTab' && typeof req === 'string') {
+      const link = Object.assign(document.createElement('a'), {
+        target: '_blank',
+        href: req,
+      })
+
+      if (link.origin === window.location.origin) {
+        window.location.href = req
+        return
+      }
+
+      const clickEvent = new MouseEvent('click', {
+        view: window,
+      })
+
+      link.dispatchEvent(clickEvent)
+    } else if (cmd === 'localStorageSet') {
+      const { key, data } = req
+      if (key && data) {
+        localStorage.setItem(
+          `${LOCAL_STORAGE_PREFIX}:${key}`,
+          typeof data === 'string' ? data : JSON.stringify(data)
+        )
+      }
+    } else if (cmd === 'localStorageGet') {
+      const { key } = req
+      if (key) {
+        const data = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
+        try {
+          _iframeContentWindow.postMessage(
+            JSON.stringify({
+              id,
+              cmd,
+              req,
+              res: data,
+            }),
+            _targetOrigin
+          )
+        } catch (err) {
+          console.error('postPassiveMessage err: ', err)
+        }
+      }
+    } else if (cmd === 'localStorageRemove') {
+      const { key } = req
+      if (key) {
+        localStorage.removeItem(`${LOCAL_STORAGE_PREFIX}:${key}`)
+      }
+    } else if (cmd === 'event') {
+      const { type, data } = payload
+      if (typeof type === 'string') {
+        window.dispatchEvent(new CustomEvent(type, { detail: data }))
+      }
     }
   }
   console.groupEnd()
 }
 
-const init = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
-  // if iFrame exists already then skip
+const connectExistingNode = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
+  // if iFrame exists already then link to it
   const existingIFrame = document.getElementById(IFRAME_ID)
   if (existingIFrame) {
+    // extract wallet origin so as we can verify iframe postMessage origin
+    _targetOrigin = getOrigin(existingIFrame.src)
+
+    if (_targetOrigin !== getOrigin(walletUrl)) {
+      throw new Error(
+        'You are not allowed to connect on different wallets in same window'
+      )
+    }
+
+    _iframe = existingIFrame
+    _iframeContentWindow = _iframe.contentWindow
+
+    _isConnected = true
+    _isMainInstance = false
+    window.addEventListener('message', receiveMessage, false)
     return
   }
+}
+
+const init = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
+  if (window._ebkWalletMainInstanceLock === true) {
+    let tries = 0
+    const checkExists = setInterval(function() {
+      if (document.getElementById(IFRAME_ID)) {
+        connectExistingNode(walletUrl)
+        clearInterval(checkExists)
+      }
+
+      if (tries > 20) {
+        clearInterval(checkExists)
+      }
+
+      tries++
+    }, 300)
+    return
+  }
+
+  window._ebkWalletMainInstanceLock = true
 
   // load CSS style
   const style = document.createElement('style')
