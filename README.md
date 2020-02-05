@@ -111,6 +111,20 @@ window.addEventListener(
 )
 ```
 
+### ebakusAccount
+
+Every time switches account in the wallet it will dispatch the `ebakusAccount` event.
+
+```js
+window.addEventListener(
+  'ebakusAccount',
+  ({ detail: address }) => {
+    console.warn('The wallet account address changed to', address)
+  },
+  false
+)
+```
+
 ### ebakusBalance
 
 On wallet balance change it will dispatch the `ebakusBalance` event.

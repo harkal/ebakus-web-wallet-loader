@@ -15,7 +15,7 @@
     crossorigin="anonymous"></script>
   <script src="https://s3.amazonaws.com/browser-solc.dappbench.com/browser-solc.min.js" type="text/javascript"></script>
   <script>
-    var web3, faucetContract
+    var web3, faucetContract, accountAddress
 
     var faucetContractAddress = '0xb487e290dd71773b39f7250efe1496677c1400da'
     var abi = JSON.parse(
@@ -39,6 +39,15 @@
 
           document.getElementById('versions').value = soljsonReleases['0.4.18']
         });
+      },
+      false
+    )
+
+    window.addEventListener(
+      'ebakusAccount',
+      ({ detail: address }) => {
+        console.warn('The wallet account address changed to', address)
+        accountAddress = address
       },
       false
     )
