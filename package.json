@@ -1,6 +1,6 @@
 {
   "name": "ebakus-web-wallet-loader",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The Ebakus wallet loader library creates an iframe and loads the web wallet library in there. It can accept custom configurations for the wallet (i.e. load custom tokens) and act as an interface between the dApp and the web wallet iframe. This way a user can use his wallet to interface with any ebakus dApp she wants without having to create new keys and manage multiple accounts.",
   "homepage": "https://www.ebakus.com/",
   "repository": {
