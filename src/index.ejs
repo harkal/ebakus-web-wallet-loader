@@ -28,7 +28,7 @@
       (ev) => {
         console.warn('Ebakus Wallet loaded!!!')
 
-        self.ebakusWallet.getCurrentProviderEndpoint().then(function(endpoint){
+        ebakusWallet.getCurrentProviderEndpoint().then(function(endpoint){
           web3 = new Web3( new Web3.providers.WebsocketProvider(endpoint) )
           faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
         })
