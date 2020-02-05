@@ -219,14 +219,20 @@ The `unlockWallet` method will ask your user to unlock the wallet in case it is 
 ebakusWallet.unlockWallet()
 ```
 
-#### ebakusWallet.getDefaultAddress()
+#### ebakusWallet.getAccount()
 
-The `getDefaultAddress` method returns the wallet address.
+The `getAccount` method returns the wallet address or an exception if no account address exists.
 
 ```js
-ebakusWallet.getDefaultAddress().then(address => {
-  console.log('Your wallet address is:', address)
-})
+ebakusWallet
+  .getAccount()
+  .then(address => {
+    console.log('Your wallet address is:', address)
+  })
+  .catch(err => {
+    console.error('Error reason:', err)
+    ebakusWallet.unlockWallet()
+  })
 ```
 
 #### ebakusWallet.getBalance()

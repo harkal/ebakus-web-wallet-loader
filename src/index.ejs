@@ -66,7 +66,7 @@
       status('getWei transaction sent, waiting for confirmation')
 
       ebakusWallet
-        .getDefaultAddress()
+        .getAccount()
         .then(address =>
         ebakusWallet.sendTransaction({
             to: faucetContractAddress,
@@ -91,7 +91,7 @@
       var contractSolc = document.getElementById('contract').value.trim()
 
       loadSolcVersion().then(compiler => {
-        ebakusWallet.getDefaultAddress().then(address => {
+        ebakusWallet.getAccount().then(address => {
           console.log('address: ', address);
           var output = compiler.compile(contractSolc, 1)
 
@@ -129,7 +129,7 @@
 
     function sendTransaction() {
       ebakusWallet
-        .getDefaultAddress()
+        .getAccount()
         .then(address => {
           var toAddress = document.getElementById('address').value
           var amount = document.getElementById('amount').value

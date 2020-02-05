@@ -21,8 +21,19 @@ const unlockWallet = data => sendPassiveMessageToWallet('unlockWallet', data)
 
 const getCurrentProviderEndpoint = () =>
   sendMessageToWallet('currentProviderEndpoint')
-const getDefaultAddress = () => sendMessageToWallet('defaultAddress')
 
+/**
+ * Get the unlocked account in Ebakus wallet.
+ *
+ * @throws when wallet is locked or no account has been created
+ * @return {Promise<string>} A hex address
+ */
+const getAccount = () => sendMessageToWallet('getAccount')
+
+/**
+ * @deprecated since 0.1.5; use getAccount instead.
+ */
+const getDefaultAddress = () => getAccount()
 const getBalance = () => sendMessageToWallet('getBalance')
 const getStaked = () => sendMessageToWallet('getStaked')
 
