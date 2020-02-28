@@ -2,6 +2,7 @@ import walletLoader, {
   sendPassiveMessageToWallet,
   sendMessageToWallet,
   isConnected as isWalletConnected,
+  unload,
 } from './walletLoader'
 
 /**
@@ -12,9 +13,11 @@ import walletLoader, {
 const init = options => {
   const { walletEndpoint, tokens } = options || {}
   if (tokens) {
-    window.addEventListener('ebakusLoaded', () => {
+    const sendInitCommand = () => {
       sendPassiveMessageToWallet('init', { tokens })
-    })
+      window.removeEventListener('ebakusLoaded', sendInitCommand)
+    }
+    window.addEventListener('ebakusLoaded', sendInitCommand)
   }
 
   // load wallet
@@ -80,6 +83,7 @@ const sendTransaction = data => sendMessageToWallet('sendTransaction', data)
 
 export default {
   init,
+  unloadWallet: unload,
   isWalletFrameLoaded,
   unlockWallet,
   getCurrentProviderEndpoint,

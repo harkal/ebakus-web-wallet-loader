@@ -259,6 +259,14 @@ The `sendTransaction` method will ask user to confirm, sign and send the transac
 ebakusWallet.sendTransaction(/* tx object */).then(receipt => console.log)
 ```
 
+#### ebakusWallet.unloadWallet()
+
+The `unloadWallet` method will remove the wallet instance already loaded in the dApp. You can then call `init` again when needed.
+
+```js
+ebakusWallet.unloadWallet()
+```
+
 ---
 
 ## Development
