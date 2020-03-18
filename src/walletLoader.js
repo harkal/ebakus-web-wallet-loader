@@ -62,7 +62,7 @@ const renderFrame = walletUrl => {
   const iframe = document.createElement('iframe')
   iframe.id = IFRAME_ID
   iframe.setAttribute('frameBorder', '0')
-  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin')
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups')
 
   iframe.onload = () => {
     // send any message so as the wallet inits itself
