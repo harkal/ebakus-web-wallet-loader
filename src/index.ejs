@@ -17,7 +17,7 @@
   <script>
     var web3, faucetContract, accountAddress
 
-    var faucetContractAddress = '0xb487e290dd71773b39f7250efe1496677c1400da'
+    var faucetContractAddress = '0xd7ee36010dc02878a9cddc23bea945dc75caab89'
     var abi = JSON.parse(
       '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
     )
@@ -52,15 +52,27 @@
       false
     )
 
-    // loading wallet with custom token
-    ebakusWallet.init({
-      // walletEndpoint:'https://wallet.ebakus.test',
-      tokens: [{
-        contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
-        symbol: 'SIM',
-        decimals: 18,
-      }]
-    })
+    init()
+
+    function init() {
+      // loading wallet with custom token
+      ebakusWallet.init({
+        // walletEndpoint:'https://wallet.ebakus-testnet.com',
+        tokens: [{
+          contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
+          symbol: 'SIM',
+          decimals: 18,
+        }]
+      })
+    }
+
+    function removeWallet() {
+      ebakusWallet.unloadWallet()
+    }
+
+    function unlockWallet() {
+      ebakusWallet.unlockWallet()
+    }
 
     function getWei() {
       status('getWei transaction sent, waiting for confirmation')
@@ -84,6 +96,7 @@
         })
         .catch(err => {
           console.error(err)
+          status(err.msg)
         })
     }
 
@@ -121,6 +134,7 @@
               })
               .catch(err => {
                 console.error(err)
+                status(err.msg)
               })
           }
         })
@@ -153,6 +167,7 @@
         })
         .catch(err => {
           console.error(err)
+          status(err.msg)
         })
     }
 
@@ -228,6 +243,13 @@ contract Echo {
     <input type="number" id="amount" name="amount" step="any" placeholder="0.0" />
 
     <button onClick="sendTransaction()">Send transaction</button>
+  </div>
+
+  <h2>4. Wallet helpers</h2>
+  <div class="wrapper">
+    <button onClick="unlockWallet()">Unlock Wallet</button>
+    <button onClick="init()">Load Wallet</button>
+    <button onClick="removeWallet()">Unload Wallet</button>
   </div>
 </body>
 

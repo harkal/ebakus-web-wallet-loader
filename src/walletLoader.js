@@ -83,11 +83,13 @@ const renderFrame = walletUrl => {
     document.body.appendChild(iframe)
     _iframeContentWindow = iframe.contentWindow
   } catch (e) {
-    window.addEventListener('DOMContentLoaded', () => {
+    const getContentWindow = () => {
       ;(document.body || document.documentElement).appendChild(iframe)
 
       _iframeContentWindow = iframe.contentWindow
-    })
+      window.removeEventListener('DOMContentLoaded', getContentWindow)
+    }
+    window.addEventListener('DOMContentLoaded', getContentWindow)
   }
 
   _iframe = iframe
@@ -288,6 +290,22 @@ const connectExistingNode = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
   }
 }
 
+const unload = () => {
+  window.removeEventListener('message', receiveMessage, false)
+  const existingIFrame = document.getElementById(IFRAME_ID)
+  if (existingIFrame) {
+    existingIFrame.remove()
+  }
+
+  window._ebkWalletMainInstanceLock = false
+  _isConnected = false
+  _isMainInstance = true
+  _targetOrigin = null
+  _iframe = null
+  _iframeContentWindow = null
+  // responseCallbacks = {}
+}
+
 const init = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
   if (window._ebkWalletMainInstanceLock === true) {
     let tries = 0
@@ -299,6 +317,7 @@ const init = (walletUrl = process.env.EBAKUS_WALLET_URL) => {
 
       if (tries > 20) {
         clearInterval(checkExists)
+        unload()
       }
 
       tries++
@@ -326,4 +345,5 @@ export {
   isConnected,
   postPassiveMessage as sendPassiveMessageToWallet,
   postMessage as sendMessageToWallet,
+  unload,
 }
