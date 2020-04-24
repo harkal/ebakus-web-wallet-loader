@@ -11,17 +11,41 @@ import walletLoader, {
  * @param {object} Options that will be passed to the wallet during load.
  */
 const init = options => {
-  const { walletEndpoint, tokens } = options || {}
-  if (tokens) {
-    const sendInitCommand = () => {
-      sendPassiveMessageToWallet('init', { tokens })
-      window.removeEventListener('ebakusLoaded', sendInitCommand)
-    }
-    window.addEventListener('ebakusLoaded', sendInitCommand)
-  }
+  return new Promise((resolve, reject) => {
+    const { walletEndpoint, tokens } = options || {}
 
-  // load wallet
-  walletLoader(walletEndpoint)
+    let hooks = []
+
+    const timeout = setTimeout(() => {
+      unload()
+      return reject(
+        new Error(
+          `Ebakus wallet loader failed to load wallet at: ${walletEndpoint ||
+            process.env.EBAKUS_WALLET_URL}`
+        )
+      )
+    }, 1000 * 30) // 30 seconds
+
+    if (tokens) {
+      hooks.push(() => sendPassiveMessageToWallet('init', { tokens }))
+    }
+
+    const onLoaded = () => {
+      clearTimeout(timeout)
+
+      for (let hook of hooks) {
+        hook()
+      }
+
+      window.removeEventListener('ebakusLoaded', onLoaded)
+      return resolve()
+    }
+
+    window.addEventListener('ebakusLoaded', onLoaded)
+
+    // load wallet
+    walletLoader(walletEndpoint)
+  })
 }
 
 /**

@@ -22,27 +22,6 @@
       '[{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"toWhom","type":"address"}],"name":"sendWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getWei","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getSendAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]'
     )
 
-    // you can listen for `ebakusLoaded` event in order to know when wallet is ready
-    window.addEventListener(
-      'ebakusLoaded',
-      (ev) => {
-        console.warn('Ebakus Wallet loaded!!!')
-
-        ebakusWallet.getCurrentProviderEndpoint().then(function(endpoint){
-          web3 = new Web3( new Web3.providers.WebsocketProvider(endpoint) )
-          faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
-        })
-
-        // document.getElementById('versions').onchange = loadSolcVersion;
-        BrowserSolc.getVersions(function (soljsonSources, soljsonReleases) {
-          populateSolcVersions(soljsonSources)
-
-          document.getElementById('versions').value = soljsonReleases['0.4.18']
-        });
-      },
-      false
-    )
-
     window.addEventListener(
       'ebakusAccount',
       ({ detail: address }) => {
@@ -57,12 +36,26 @@
     function init() {
       // loading wallet with custom token
       ebakusWallet.init({
-        // walletEndpoint:'https://wallet.ebakus-testnet.com',
+        walletEndpoint:'https://wallet.ebakus-testnet.com', // use testnet
         tokens: [{
           contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
           symbol: 'SIM',
           decimals: 18,
         }]
+      }).then(() => {
+        console.warn('Ebakus Wallet loaded from init!!!')
+
+        ebakusWallet.getCurrentProviderEndpoint().then(function(endpoint){
+          web3 = new Web3( new Web3.providers.WebsocketProvider(endpoint) )
+          faucetContract = new web3.eth.Contract(abi, faucetContractAddress)
+        })
+
+        // document.getElementById('versions').onchange = loadSolcVersion;
+        BrowserSolc.getVersions(function (soljsonSources, soljsonReleases) {
+          populateSolcVersions(soljsonSources)
+
+          document.getElementById('versions').value = soljsonReleases['0.4.18']
+        });
       })
     }
 

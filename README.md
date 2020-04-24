@@ -33,6 +33,8 @@ import ebakusWallet from 'ebakus-web-wallet-loader'
 ebakusWallet.init() // you have to load the wallet once
 ```
 
+> You can wait for wallet to finish loading. `init()` is a Promise.
+
 ### With a script tag from your site
 
 In your dApp page you have to include our Wallet Loader script.
@@ -165,24 +167,20 @@ You can:
 
 ```js
 // loading custom token to wallet
-ebakusWallet.init({
-  // walletEndpoint: 'https://wallet.ebakus.test'  // this is the default and can be ommitted
-  tokens: [
-    {
-      contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
-      symbol: 'SIM',
-      decimals: 18,
-    },
-  ],
-})
-
-window.addEventListener(
-  'ebakusLoaded',
-  ev => {
+ebakusWallet
+  .init({
+    // walletEndpoint: 'https://wallet.ebakus.test'  // this is the default and can be ommitted
+    tokens: [
+      {
+        contract_address: '0xa679d48c57320e9f0eadb043c3ea3f8dcd97ed01',
+        symbol: 'SIM',
+        decimals: 18,
+      },
+    ],
+  })
+  .then(() => {
     console.warn('Ebakus Wallet loaded')
-  },
-  false
-)
+  })
 ```
 
 #### ebakusWallet.isWalletFrameLoaded()
